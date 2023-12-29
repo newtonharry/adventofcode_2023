@@ -5,7 +5,7 @@ fn is_valid_symbol(ch: &char) -> bool {
 }
 
 pub fn solve(file: &str) -> i32 {
-    let relative_coordinates = [
+    let neighbors = [
         (-1, -1),
         (0, -1),
         (1, -1),
@@ -19,10 +19,12 @@ pub fn solve(file: &str) -> i32 {
     let data = fs::read_to_string(file).expect("File input does not exist");
     let data_chars = data.chars().filter(|c| *c != '\n').collect::<Vec<char>>();
     let lines = data.split('\n').collect::<Vec<&str>>();
-    let mut has_symbol = false;
-    let mut number = String::new();
+
     let width = lines[0].len() as i32;
     let height = lines.len() as i32;
+
+    let mut has_symbol = false;
+    let mut number = String::new();
     let mut sum = 0;
 
     for (y, line) in lines.iter().enumerate() {
@@ -41,9 +43,9 @@ pub fn solve(file: &str) -> i32 {
                 number.clear();
             }
 
-            // Check to see if the number doesn't already border a symbol
+            // Check to see if a digit of a number doesn't already border a symbol
             if !has_symbol && is_digit {
-                for (rel_x, rel_y) in relative_coordinates {
+                for (rel_x, rel_y) in neighbors {
                     let new_x = x + rel_x;
                     let new_y = y + rel_y;
 
