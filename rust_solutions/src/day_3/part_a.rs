@@ -13,8 +13,8 @@ pub fn solve(file: &str) -> i32 {
     ];
 
     let data = fs::read_to_string(file).expect("File input does not exist");
-    let data_chars = data.chars().filter(|c| *c != '\n').collect::<Vec<char>>();
-    let lines = data.split('\n').collect::<Vec<&str>>();
+    let data_chars = data.chars().collect::<Vec<char>>();
+    let lines = data.split_inclusive('\n').collect::<Vec<&str>>();
 
     let width = lines[0].len() as i32;
     let height = lines.len() as i32;
@@ -39,7 +39,7 @@ pub fn solve(file: &str) -> i32 {
                 number.clear();
             }
 
-            // Check to see if a digit of a number doesn't already border a symbol
+            // Check to see if a digit doesn't already border a symbol
             if !has_symbol && is_digit {
                 for (rel_x, rel_y) in neighbors {
                     let new_x = x + rel_x;
@@ -49,7 +49,7 @@ pub fn solve(file: &str) -> i32 {
                         let new_index = (new_y * width + new_x) as usize;
                         let adjacent_char: Option<&char> = data_chars.get(new_index);
                         if let Some(c) = adjacent_char {
-                            if !c.is_ascii_digit() && *c != '.' {
+                            if !c.is_ascii_digit() && *c != '.' && *c != '\n' {
                                 has_symbol = true;
                                 break;
                             }
