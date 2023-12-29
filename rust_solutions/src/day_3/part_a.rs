@@ -1,9 +1,5 @@
 use std::fs;
 
-fn is_valid_symbol(ch: &char) -> bool {
-    !ch.is_ascii_digit() && *ch != '.'
-}
-
 pub fn solve(file: &str) -> i32 {
     let neighbors = [
         (-1, -1),
@@ -53,7 +49,7 @@ pub fn solve(file: &str) -> i32 {
                         let new_index = (new_y * width + new_x) as usize;
                         let adjacent_char: Option<&char> = data_chars.get(new_index);
                         if let Some(c) = adjacent_char {
-                            if is_valid_symbol(c) {
+                            if !c.is_ascii_digit() && *c != '.' {
                                 has_symbol = true;
                                 break;
                             }
