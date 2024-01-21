@@ -1,4 +1,3 @@
-use core::num;
 use std::{collections::HashMap, fs};
 
 fn calculate_matching_numbers(winning_numbers: &Vec<i32>, numbers: &str) -> usize {
@@ -8,6 +7,21 @@ fn calculate_matching_numbers(winning_numbers: &Vec<i32>, numbers: &str) -> usiz
         .map(|s| s.parse::<i32>().unwrap());
 
     numbers.map(|x| winning_numbers.contains(&x) as usize).sum()
+}
+
+fn update_total_cards_and_queue(
+    total_cards: &mut usize,
+    queue: &mut Vec<usize>,
+    card_num: usize,
+    num_of_cards: usize,
+    score: usize,
+) {
+    *total_cards += score;
+    if ((card_num + 1) + score) > num_of_cards + 1 {
+        queue.extend((card_num + 1)..(num_of_cards + 1));
+    } else {
+        queue.extend((card_num + 1)..((card_num + 1) + score));
+    }
 }
 
 pub fn solve(file: &str) -> usize {
@@ -43,13 +57,7 @@ pub fn solve(file: &str) -> usize {
         })
         .collect::<Vec<_>>();
 
-    // Calculate the matching numbers and store in a hashmap to reduce unnecessary computations
-    let scores = cards
-        .iter()
-        .enumerate()
-        .map(|(card_num, (wnums, nums))| (card_num + 1, calculate_matching_numbers(wnums, nums)))
-        .collect::<HashMap<usize, usize>>();
-
+    let mut scores = HashMap::new();
     let num_of_cards = cards.len();
     total_cards += num_of_cards; // Add the inital number of cards
 
@@ -61,11 +69,29 @@ pub fn solve(file: &str) -> usize {
             if *score == 0 || (card_num + 1) > num_of_cards {
                 continue;
             } else {
-                total_cards += score;
-                if ((card_num + 1) + score) > num_of_cards + 1 {
-                    queue.extend((card_num + 1)..(num_of_cards + 1));
+                update_total_cards_and_queue(
+                    &mut total_cards,
+                    &mut queue,
+                    card_num,
+                    num_of_cards,
+                    *score,
+                );
+            }
+        } else {
+            if let Some(card) = cards.get(card_num - 1) {
+                let (wnums, nums) = card;
+                let temp_score = calculate_matching_numbers(wnums, nums);
+                scores.insert(card_num, temp_score);
+                if temp_score == 0 || (card_num + 1) > num_of_cards {
+                    continue;
                 } else {
-                    queue.extend((card_num + 1)..((card_num + 1) + score));
+                    update_total_cards_and_queue(
+                        &mut total_cards,
+                        &mut queue,
+                        card_num,
+                        num_of_cards,
+                        temp_score,
+                    );
                 }
             }
         }
