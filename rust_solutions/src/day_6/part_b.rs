@@ -18,15 +18,19 @@ pub fn solve(file: &str) -> u64 {
     let lines = data.lines().collect::<Vec<&str>>();
     let race_time = get_number(lines[0]);
     let distance_record = get_number(lines[1]);
-    let mut lower_limit = 0;
 
-    for time_button_held in 1..race_time {
-        let distance_traveled = (race_time - time_button_held) * time_button_held;
-        if distance_traveled > distance_record {
-            // We have found the lowest limit
-            lower_limit = time_button_held;
-            break;
+    // Can half the search space given as the distance record increases,it approaches the maxima of the quadratic function, before becoming impossible
+    let (mut low, mut high) = (1, race_time / 2);
+
+    // Perform binary search instead of linear search:O(log n)
+    while low < high {
+        let mid = low + (high - low) / 2;
+        let distance_traveled = (race_time - mid) * mid;
+        if distance_traveled <= distance_record {
+            low = mid + 1;
+        } else {
+            high = mid;
         }
     }
-    (race_time - (lower_limit * 2)) + 1
+    (race_time - (low * 2)) + 1
 }

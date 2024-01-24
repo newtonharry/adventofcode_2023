@@ -22,19 +22,22 @@ pub fn solve(file: &str) -> usize {
 
     let mut num_of_beats = vec![];
 
-    for (time, record_dist) in times_dist {
-        let mut lower_limit = 0;
-        for time_held in 1..*time {
-            let distance_traveled = (*time - time_held) * time_held;
-            if distance_traveled > *record_dist {
-                lower_limit = time_held;
-                break; // Break as soon as a valid lower limit is found
+    for (race_time, record_dist) in times_dist {
+        let (mut low, mut high) = (1, *race_time / 2);
+        // Perform binary search instead of linear search: O(n/2)
+        while low < high {
+            let mid = low + (high - low) / 2;
+            let distance_traveled = (race_time - mid) * mid;
+            if distance_traveled <= *record_dist {
+                low = mid + 1;
+            } else {
+                high = mid;
             }
         }
-        let wins = if lower_limit == 0 {
+        let wins = if low == 0 {
             0
         } else {
-            *time - (lower_limit * 2) + 1
+            *race_time - (low * 2) + 1
         };
         num_of_beats.push(wins);
     }
