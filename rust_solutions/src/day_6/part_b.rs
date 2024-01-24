@@ -22,15 +22,15 @@ pub fn solve(file: &str) -> u64 {
     // Can half the search space given as the distance record increases,it approaches the maxima of the quadratic function, before becoming impossible
     let (mut low, mut high) = (1, race_time / 2);
 
-    // Perform binary search instead of linear search:O(log n)
+    // Perform binary search instead of linear search to find the smallest value which wins
     while low < high {
-        let mid = low + (high - low) / 2;
-        let distance_traveled = (race_time - mid) * mid;
+        let mid = low + (high - low) / 2; // Find the x value we are interested in
+        let distance_traveled = (race_time - mid) * mid; // <-- quadratic function (plot on desmos), plug x value in produce distance traveled
         if distance_traveled <= distance_record {
             low = mid + 1;
         } else {
             high = mid;
         }
     }
-    (race_time - (low * 2)) + 1
+    (race_time - (low * 2)) + 1 // We can multiply the low value by 2 because it is derived from a quadratic function (symmetry)
 }
