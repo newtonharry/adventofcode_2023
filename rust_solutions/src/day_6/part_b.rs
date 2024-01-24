@@ -1,6 +1,6 @@
 use std::fs;
 
-use regex::{Captures, Regex};
+use regex::Regex;
 
 fn get_number<'a>(text: &str) -> u64 {
     let numbers_regex = Regex::new(r"\d+").unwrap();
