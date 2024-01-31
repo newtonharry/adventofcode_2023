@@ -28,7 +28,7 @@ pub fn solve(file: &str) -> u64 {
 
     // Get left/right instructions first
     let movement_instructions = lines.get(0).unwrap().split("").filter(|c| *c != "");
-    let num_of_instructions = movement_instructions.clone().count();
+    let num_of_instructions: usize = movement_instructions.clone().count();
     let mut looping_instructions = movement_instructions.clone().cycle();
     drop(movement_instructions);
 
@@ -48,6 +48,7 @@ pub fn solve(file: &str) -> u64 {
     let starting_nodes = mappings.keys().filter(|node| node.ends_with('A'));
     let num_of_starting_nodes = starting_nodes.clone().count();
     let mut counter: u64 = 0;
+
     let direction = looping_instructions.next().unwrap();
     let mut nodes = starting_nodes
         .map(|starting_node| {
@@ -69,18 +70,24 @@ pub fn solve(file: &str) -> u64 {
             .iter()
             .filter_map(|starting_node| {
                 let (left, right) = mappings.get(*starting_node).unwrap();
-                if left.ends_with('Z') || right.ends_with('Z') {
-                    // Do I neecd to add the distance it takes to get back to the node starting with A?
-                    discovered_end_nodes.push(counter);
-
-                    // We are done iterating through this cycle, so don't bother iterating on it next time
-                    return None;
-                }
 
                 if direction == "L" {
-                    return Some(left);
+                    if left.ends_with('Z') {
+                        // Do I neecd to add the distance it takes to get back to the node starting with A?
+                        discovered_end_nodes.push(counter);
+
+                        // We are done iterating through this cycle, so don't bother iterating on it next time
+                        return None;
+                    } else {
+                        return Some(left);
+                    }
                 } else {
-                    return Some(right);
+                    if right.ends_with('Z') {
+                        discovered_end_nodes.push(counter);
+                        return None;
+                    } else {
+                        return Some(right);
+                    }
                 }
             })
             .collect::<Vec<&&str>>();
@@ -95,5 +102,3 @@ pub fn solve(file: &str) -> u64 {
 
 generate_test_input_test!(8, 6);
 generate_puzzle_input_test!(8, 15989);
-
-// generate_puzzle_input_test!(8, 248179786);
