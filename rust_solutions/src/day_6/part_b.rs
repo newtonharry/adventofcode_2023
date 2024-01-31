@@ -2,6 +2,8 @@ use std::fs;
 
 use regex::Regex;
 
+use crate::{generate_puzzle_input_test, generate_test_input_test};
+
 fn get_number<'a>(text: &str) -> u64 {
     let numbers_regex = Regex::new(r"\d+").unwrap();
     numbers_regex
@@ -34,3 +36,6 @@ pub fn solve(file: &str) -> u64 {
     }
     (race_time - (low * 2)) + 1 // We can multiply the low value by 2 because it is derived from a quadratic function (symmetry)
 }
+
+generate_test_input_test!(6, 71503);
+generate_puzzle_input_test!(6, 39570185);

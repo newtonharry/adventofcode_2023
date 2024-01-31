@@ -1,5 +1,7 @@
 use std::fs;
 
+use crate::{generate_puzzle_input_test, generate_test_input_test};
+
 pub fn solve(file: &str) -> i32 {
     let neighbors = [
         (-1, -1),
@@ -61,3 +63,6 @@ pub fn solve(file: &str) -> i32 {
     }
     sum
 }
+
+generate_test_input_test!(3, 4361);
+generate_puzzle_input_test!(3, 556367);

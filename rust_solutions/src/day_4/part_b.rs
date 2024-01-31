@@ -1,5 +1,7 @@
 use std::{collections::HashMap, fs};
 
+use crate::{generate_puzzle_input_test, generate_test_input_test, utils::read_file};
+
 fn calculate_matching_numbers(winning_numbers: &Vec<i32>, numbers: &str) -> usize {
     let numbers = numbers
         .split(' ')
@@ -25,13 +27,12 @@ fn update_total_cards_and_queue(
 }
 
 pub fn solve(file: &str) -> usize {
-    let data = fs::read_to_string(file).expect("Input needs to exist");
-    let lines = data.split('\n').collect::<Vec<&str>>();
+    let lines = read_file(file);
     let mut total_cards = 0;
     let mut queue: Vec<usize> = Vec::new();
     let cards = lines
         .iter()
-        .map(|line: &&str| -> (Vec<i32>, &str) {
+        .map(|line: &String| -> (Vec<i32>, &str) {
             let parts = line
                 .split(':')
                 .collect::<Vec<&str>>()
@@ -98,3 +99,6 @@ pub fn solve(file: &str) -> usize {
     }
     total_cards
 }
+
+generate_test_input_test!(4, 30);
+generate_puzzle_input_test!(4, 8570000);

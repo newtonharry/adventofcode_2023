@@ -1,6 +1,8 @@
 use core::num;
 use std::{collections::HashSet, fs};
 
+use crate::{generate_puzzle_input_test, generate_test_input_test};
+
 #[derive(Debug, Eq, PartialEq, Hash)]
 struct PartNumber {
     number: i32,
@@ -92,3 +94,6 @@ pub fn solve(file: &str) -> i32 {
     }
     sum
 }
+
+generate_test_input_test!(3, 467835);
+generate_puzzle_input_test!(3, 89471771);

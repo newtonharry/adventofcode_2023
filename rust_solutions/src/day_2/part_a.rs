@@ -1,5 +1,7 @@
 use std::fs;
 
+use crate::{generate_puzzle_input_test, generate_test_input_test};
+
 struct Game {
     game_id: u32,
     impossible: bool,
@@ -44,3 +46,6 @@ pub fn solve(file: &str) -> u32 {
         .map(|game| game.game_id)
         .sum()
 }
+
+generate_test_input_test!(2, 8);
+generate_puzzle_input_test!(2, 1931);

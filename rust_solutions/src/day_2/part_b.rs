@@ -1,5 +1,7 @@
 use std::fs;
 
+use crate::{generate_puzzle_input_test, generate_test_input_test};
+
 #[derive(Default)]
 struct Game {
     min_red: i32,
@@ -41,3 +43,6 @@ pub fn solve(file: &str) -> i32 {
 
     sum
 }
+
+generate_test_input_test!(2, 2286);
+generate_puzzle_input_test!(2, 83105);

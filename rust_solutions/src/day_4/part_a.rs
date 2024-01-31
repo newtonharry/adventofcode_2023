@@ -1,5 +1,7 @@
 use std::fs;
 
+use crate::{generate_puzzle_input_test, generate_test_input_test, utils::read_file};
+
 fn calculate_score_on_scratchcard(
     winning_numbers: Vec<i32>,
     numbers: impl Iterator<Item = i32>,
@@ -19,9 +21,8 @@ fn calculate_score_on_scratchcard(
 
 pub fn solve(file: &str) -> i32 {
     let mut sum = 0;
-    let data = fs::read_to_string(file).expect("Input needs to exist");
-    let lines = data.split('\n').collect::<Vec<&str>>();
-    let cards = lines.iter().map(|line: &&str| -> (Vec<i32>, &str) {
+    let lines = read_file(file);
+    let cards = lines.iter().map(|line: &String| -> (Vec<i32>, &str) {
         let parts = line
             .split(':')
             .collect::<Vec<&str>>()
@@ -60,3 +61,6 @@ pub fn solve(file: &str) -> i32 {
     }
     sum
 }
+
+generate_test_input_test!(4, 13);
+generate_puzzle_input_test!(4, 23847);

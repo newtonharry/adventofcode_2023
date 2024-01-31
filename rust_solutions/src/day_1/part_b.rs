@@ -1,10 +1,10 @@
-use std::fs;
+use crate::{generate_puzzle_input_test, generate_test_input_custom_input, utils::read_file};
 
 pub fn solve(file: &str) -> i32 {
-    let file = fs::read_to_string(file).expect("Make sure data file is available");
+    let file = read_file(file);
     let mut cleansed_data: Vec<String> = Vec::new();
     let mut new_line = String::new();
-    for line in file.split('\n') {
+    for line in file {
         for i in 0..line.len() {
             let slice = &line[i..];
             match slice {
@@ -40,3 +40,6 @@ pub fn solve(file: &str) -> i32 {
         .map(|value| value.parse::<i32>().unwrap())
         .sum()
 }
+
+generate_test_input_custom_input!("../problem_inputs/problem_1_part_b_test_input.txt", 281);
+generate_puzzle_input_test!(1, 55413);

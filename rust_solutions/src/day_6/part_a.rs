@@ -1,6 +1,8 @@
 use regex::Regex;
 use std::fs;
 
+use crate::{generate_puzzle_input_test, generate_test_input_test};
+
 fn get_numbers<'a>(regex: &'a Regex, text: &'a str) -> impl Iterator<Item = usize> + 'a {
     regex
         .find_iter(text)
@@ -40,3 +42,6 @@ pub fn solve(file: &str) -> usize {
 
     num_of_beats.iter().product()
 }
+
+generate_test_input_test!(6, 288);
+generate_puzzle_input_test!(6, 140220);

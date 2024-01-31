@@ -1,5 +1,7 @@
 use std::fs;
 
+use crate::{generate_puzzle_input_test, generate_test_input_test};
+
 #[derive(Default, Debug)]
 struct Mapper {
     destinations: Vec<i64>,
@@ -97,3 +99,6 @@ pub fn solve(file: &str) -> i64 {
     // return smallest number from nums
     *(nums.iter().min().unwrap())
 }
+
+generate_test_input_test!(5, 35);
+generate_puzzle_input_test!(5, 289863851);
