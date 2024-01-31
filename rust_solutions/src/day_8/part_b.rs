@@ -30,12 +30,13 @@ pub fn solve(file: &str) -> u64 {
     let movement_instructions = lines.get(0).unwrap().split("").filter(|c| *c != "");
     let num_of_instructions = movement_instructions.clone().count();
     let mut looping_instructions = movement_instructions.clone().cycle();
+    drop(movement_instructions);
 
     let mut mappings: HashMap<&str, (&str, &str)> = HashMap::new();
     let line_regex = Regex::new(r"([0-9A-Z]+) = \(([0-9A-Z]+), ([0-9A-Z]+)\)").unwrap();
 
     // Reassign lines to skip the empty line and start where the mappings start
-    lines[1..].iter().for_each(|line| {
+    lines[1..].into_iter().for_each(|line| {
         line_regex
             .captures_iter(&line)
             .map(|c| c.extract())
@@ -44,8 +45,6 @@ pub fn solve(file: &str) -> u64 {
             });
     });
 
-    // Get node that end in A
-    // // Set up the starting point nodes and do inital computation to get left right nodes
     let starting_nodes = mappings.keys().filter(|node| node.ends_with('A'));
     let num_of_starting_nodes = starting_nodes.clone().count();
     let mut counter: u64 = 0;
@@ -62,13 +61,6 @@ pub fn solve(file: &str) -> u64 {
         .collect::<Vec<&&str>>();
     counter += 1; // We have traversed one node so add one
 
-    // Need a way to log currently visited nodes and at what position along the looping_instructions
-    // they were visited at. If we visit a node that has already been visited, we can skip it and add
-    //
-
-    // How long does it take to get back to the node ending in Z???
-    // In the example, I've been biased by the fact that it will take
-
     let mut discovered_end_nodes: Vec<u64> = vec![];
     while discovered_end_nodes.len() != num_of_starting_nodes {
         let direction = looping_instructions.next().unwrap();
@@ -77,29 +69,17 @@ pub fn solve(file: &str) -> u64 {
             .iter()
             .filter_map(|starting_node| {
                 let (left, right) = mappings.get(*starting_node).unwrap();
-                if left.ends_with('Z') {
-                    println!(
-                        "Found end node {} at cycle position {}",
-                        left,
-                        counter % num_of_instructions as u64
-                    );
+                if left.ends_with('Z') || right.ends_with('Z') {
+                    // Do I neecd to add the distance it takes to get back to the node starting with A?
                     discovered_end_nodes.push(counter);
-                    return None;
-                } else if right.ends_with('Z') {
-                    println!(
-                        "Found end node {} at cycle position {}",
-                        right,
-                        counter % num_of_instructions as u64
-                    );
-                    discovered_end_nodes.push(counter);
+
+                    // We are done iterating through this cycle, so don't bother iterating on it next time
                     return None;
                 }
 
                 if direction == "L" {
-                    println!("Going left on {}", left);
                     return Some(left);
                 } else {
-                    println!("Going right on {}", right);
                     return Some(right);
                 }
             })
